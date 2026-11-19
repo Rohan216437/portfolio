@@ -1,26 +1,252 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@custom-variant light (&:where([data-theme="light"], [data-theme="light"] *));
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ─────────────────────────  THEME TOKENS  ───────────────────────── */
+/* Dark: "Neon Noir" (default) */
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #07070c;
+  --bg-elev: #11111a;
+  --bg-deep: #030306;
+  --ink: #edebff;
+  --ink-dim: #8b89a6;
+  --line: #2a2840;
+  --acid: #c6ff3d;
+  --hot: #ff3d9a;
+  --volt: #3df2ff;
+  --marker: rgba(198, 255, 61, 0.22);
+  --on-acid: #07070c;
+  --glow: 0 0 24px color-mix(in oklab, var(--acid) 45%, transparent);
+  --shadow-card: 0 0 0 1px var(--line), 0 20px 60px -20px rgba(0, 0, 0, 0.8);
+  --grain-opacity: 0.07;
+}
+
+/* Light: "Paper Lab" */
+[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f3f0e8;
+  --bg-elev: #ffffff;
+  --bg-deep: #e7e2d6;
+  --ink: #14131a;
+  --ink-dim: #5e5b6b;
+  --line: #d3cdbf;
+  --acid: #5b3df5;
+  --hot: #e8410f;
+  --volt: #0b7a8a;
+  --marker: #d9ff4a;
+  --on-acid: #ffffff;
+  --glow: 4px 4px 0 var(--ink);
+  --shadow-card: 0 0 0 1.5px var(--ink), 6px 6px 0 var(--ink);
+  --grain-opacity: 0.05;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: var(--bg);
+  --color-bg-elev: var(--bg-elev);
+  --color-bg-deep: var(--bg-deep);
+  --color-ink: var(--ink);
+  --color-ink-dim: var(--ink-dim);
+  --color-line: var(--line);
+  --color-acid: var(--acid);
+  --color-hot: var(--hot);
+  --color-volt: var(--volt);
+  --color-on-acid: var(--on-acid);
+  --font-display: var(--font-unbounded), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ─────────────────────────  BASE  ───────────────────────── */
+html {
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  min-height: 100dvh;
 }
+
+::selection {
+  background: var(--acid);
+  color: var(--on-acid);
+}
+
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--acid);
+    outline-offset: 3px;
+  }
+}
+
+/* Fluid type scale */
+.t-mega {
+  font-family: var(--font-display);
+  font-size: clamp(3.2rem, 14vw, 13rem);
+  line-height: 0.86;
+  letter-spacing: -0.04em;
+  font-weight: 800;
+}
+.t-huge {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 7vw, 6rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+}
+.t-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3.4vw, 2.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+.t-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* Outlined display text */
+.t-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--ink);
+}
+
+/* Highlighter swipe (light) / glow underline (dark) */
+.marker {
+  background: linear-gradient(transparent 55%, var(--marker) 55%, var(--marker) 92%, transparent 92%);
+  padding: 0 0.15em;
+}
+
+/* Film grain overlay */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  pointer-events: none;
+  z-index: 100;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation: grain 1.2s steps(6) infinite;
+}
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-3%, 2%); }
+  40% { transform: translate(2%, -4%); }
+  60% { transform: translate(-4%, -1%); }
+  80% { transform: translate(3%, 3%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* Glitch for the hero name only */
+.glitch {
+  position: relative;
+}
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+.glitch:hover::before,
+.glitch.is-glitching::before {
+  opacity: 0.8;
+  color: var(--hot);
+  transform: translate(-3px, 1px);
+  clip-path: inset(10% 0 55% 0);
+  animation: glitch-a 0.35s steps(2) infinite;
+}
+.glitch:hover::after,
+.glitch.is-glitching::after {
+  opacity: 0.8;
+  color: var(--volt);
+  transform: translate(3px, -1px);
+  clip-path: inset(60% 0 8% 0);
+  animation: glitch-b 0.3s steps(2) infinite;
+}
+@keyframes glitch-a {
+  50% { clip-path: inset(40% 0 30% 0); transform: translate(4px, -2px); }
+}
+@keyframes glitch-b {
+  50% { clip-path: inset(15% 0 70% 0); transform: translate(-4px, 2px); }
+}
+
+/* Theme switch circular reveal (View Transitions API) */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Hide native cursor only when the custom cursor is active */
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .grain::after {
+    animation: none;
+  }
+}
+
+/* Visually hidden but available to screen readers */
+.sr-only-focusable:not(:focus):not(:focus-within) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ─────────────────────────  ROHAN OS  ───────────────────────── */
+.dots {
+  background-image: radial-gradient(var(--line) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+@keyframes nimbu-swing {
+  0%, 100% { transform: rotate(4deg); }
+  50% { transform: rotate(-4deg); }
+}
+@keyframes os-row-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes bug-crawl-0 {
+  to { transform: translate(18vw, 9vh) rotate(70deg); }
+}
+@keyframes bug-crawl-1 {
+  to { transform: translate(-14vw, 16vh) rotate(-110deg); }
+}
+@keyframes bug-crawl-2 {
+  to { transform: translate(9vw, -14vh) rotate(160deg); }
+}
+@keyframes blob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(4%, -6%) scale(1.08); }
+}
+@keyframes blink { 50% { opacity: 0; } }
+@keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }

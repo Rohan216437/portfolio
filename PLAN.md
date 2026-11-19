@@ -1,4 +1,28 @@
-# Portfolio Plan: "ENHANCE."
+# Portfolio Plan: "RohanOS"
+
+> **Current concept (2026-11-16):** the portfolio is a fake desktop operating system — RohanOS.
+> The earlier scroll-driven "ENHANCE." infinite zoom was dropped (it didn't feel good to scroll through).
+> Sections below the line describe the old concept and are kept only for reference; the content rules,
+> colour/typography system and decisions still apply.
+
+## How RohanOS works
+
+| Piece | What it does | File |
+|---|---|---|
+| Boot screen | BIOS lines → 0…99 → 97 → 100 "Fine. We're faking it." (once per session, skippable; *Restart* in the RG menu replays it) | `src/components/os/Boot.tsx` |
+| Menu bar | RG menu (About / Terminal / Boring Mode / Restart / Shut Down gag), active app name, chai battery (drains, click to refill), Boring Mode, theme switch, IST clock | `MenuBar.tsx` |
+| **Nimbu Mirchi Antivirus™** | Hangs from the top-right corner, swings. Hover = status tooltip. Poke it 4× → protection disabled → bug invasion, squash 12 bugs in 12 s | `NimbuMirchi.tsx` |
+| Desktop | Wallpaper with name/tagline (the page `h1`), icon grid, right-click context menu, mouse parallax | `RohanOS.tsx` |
+| Windows | Open with a fly-out from the clicked icon, close back into it, minimise into the dock, drag, resize, maximise (double-click title), Esc to close. Full-screen sheets on mobile | `Window.tsx` |
+| Dock | Welcome, About, Skills, Projects, Experience, Mail, Terminal, Recycle Bin | `RohanOS.tsx` |
+| Apps | welcome.app · about.txt (Wikipedia parody) · Task Manager (skills, no %) · ~/projects → case-study windows · Metro career line · Mail (working contact form) · Terminal (`help`, `sudo hire rohan`, `nimbu`, `chai`, …) · Recycle Bin = Bug Zoo · resume.pdf | `src/components/os/apps/*` |
+| Easter eggs | custom sarcastic cursor, idle nap, tab title, console note, Konami / typing `bug` opens the Bug Zoo | `Cursor.tsx`, `Gags.tsx` |
+
+Unchanged: Boring Mode (`/boring`), case-study pages (`/work/[slug]`), contact API, content layer (`src/content/*`).
+
+---
+
+## (Superseded) Original concept: "ENHANCE."
 
 One continuous infinite zoom through Rohan Gupta's professional identity.
 The visitor never changes pages; every scene is hidden inside a detail of the previous one.
@@ -169,6 +193,14 @@ SEO: metadata + OG image per route, `Person` JSON-LD, sitemap, a real semantic H
 
 ---
 
-## 9. Open questions (needed before the relevant phase)
+## 9. Decisions (answered 2026-11-16)
 
-See the list in the conversation; answers will be recorded here.
+- Clients are never named. BDI is never mentioned.
+- DBTPL: July 2023 – present. PHP/CodeIgniter on MeCard since July 2024.
+- Selenium automation = part of MeCard work. Node.js + React used in the AI project (private repo, no public link).
+- Humour: extreme. Hosting: Vercel. Contact form: Gmail via App Password (`.env.local`, see `.env.example`).
+- Implementation note: the zoom is driven directly from Lenis scroll events (no ScrollTrigger needed), GSAP stays available for later effects.
+
+## 10. Still missing (placeholders in `src/content/profile.ts`)
+
+GitHub URL · LinkedIn URL · resume PDF (`public/resume/`) · professional email · photo · final domain (`siteUrl`).
